@@ -1,0 +1,135 @@
+---
+title: "Assignment#7"
+format: html
+editor: visual
+---
+
+## Approach
+
+This assignment is designed to give experience with HTML and JSON file formats and for this assignment we are supposed to use 3 books and their information. I will decide on the books in my approach and manually create the raw HTML file and JSON file. Ill use these 3 books on the topic of strength training and powerlifting.
+
+1.  Starting Strength by Mark Rippetoe. Year: 2011. Publisher: Aasgaard Company. Genre: Fitness.
+2.  Practical Programming for Strength Training by Mark Rippetoe and Andy Baker. Year: 2013. Publisher: Aasgaard Company. Genre: Strength Training
+3.  The New Encylopedia of Modern Bodybuilding by Arnold Schwarzenegger and Bill Dobbins. Year: 1998. Publisher: Simon & Schuster. Genre: Bodybuilding
+
+## Code Base 
+
+```{r}
+html_content <- '<!DOCTYPE html>
+<html>
+  <head><title>Books</title></head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th><th>Authors</th><th>Year</th><th>Publisher</th><th>Genre</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Starting Strength</td>
+          <td>Mark Rippetoe</td>
+          <td>2011</td>
+          <td>Aasgaard Company</td>
+          <td>Fitness</td>
+        </tr>
+        <tr>
+          <td>Practical Programming for Strength Training</td>
+          <td>Mark Rippetoe, Andy Baker</td>
+          <td>2013</td>
+          <td>Aasgaard Company</td>
+          <td>Strength Training</td>
+        </tr>
+        <tr>
+          <td>The New Encyclopedia of Modern Bodybuilding</td>
+          <td>Arnold Schwarzenegger, Bill Dobbins</td>
+          <td>1998</td>
+          <td>Simon &amp; Schuster</td>
+          <td>Bodybuilding</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>'
+
+writeLines(html_content, "books.html")
+
+json_content <- '{
+  "books": [
+    {
+      "title": "Starting Strength",
+      "authors": "Mark Rippetoe",
+      "year": 2011,
+      "publisher": "Aasgaard Company",
+      "genre": "Fitness"
+    },
+    {
+      "title": "Practical Programming for Strength Training",
+      "authors": "Mark Rippetoe, Andy Baker",
+      "year": 2013,
+      "publisher": "Aasgaard Company",
+      "genre": "Strength Training"
+    },
+    {
+      "title": "The New Encyclopedia of Modern Bodybuilding",
+      "authors": "Arnold Schwarzenegger, Bill Dobbins",
+      "year": 1998,
+      "publisher": "Simon & Schuster",
+      "genre": "Bodybuilding"
+    }
+  ]
+}'
+
+writeLines(json_content, "books.json")
+
+```
+
+```{r}
+
+library(rvest)
+```
+
+### Load HTML into dataframe 
+
+```{r}
+df_html <- read_html("books.html") |>
+  html_element("table") |>
+  html_table()
+
+colnames(df_html) <- tolower(colnames(df_html))
+
+df_html
+```
+
+### Load JSON into a data frame 
+
+```{r}
+library(jsonlite)
+```
+
+```{r}
+df_json <- fromJSON("books.json")$books
+df_json$year <- as.integer(df_json$year)
+
+df_json
+```
+
+### Compare the 2 dataframes 
+
+```{r}
+library(dplyr)
+
+df_json <- df_json[, colnames(df_html)]
+
+# Are they identical?
+identical(df_html, df_json)
+
+# What differs (if anything)?
+all.equal(df_html, df_json)
+
+# Side by side
+bind_rows(
+  mutate(df_html, source = "HTML"),
+  mutate(df_json, source = "JSON")
+)
+```
