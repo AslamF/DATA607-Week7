@@ -1,0 +1,25 @@
+{
+  "books": [
+    {
+      "title": "Starting Strength",
+      "authors": "Mark Rippetoe",
+      "year": 2011,
+      "publisher": "Aasgaard Company",
+      "genre": "Fitness"
+    },
+    {
+      "title": "Practical Programming for Strength Training",
+      "authors": "Mark Rippetoe, Andy Baker",
+      "year": 2013,
+      "publisher": "Aasgaard Company",
+      "genre": "Strength Training"
+    },
+    {
+      "title": "The New Encyclopedia of Modern Bodybuilding",
+      "authors": "Arnold Schwarzenegger, Bill Dobbins",
+      "year": 1998,
+      "publisher": "Simon & Schuster",
+      "genre": "Bodybuilding"
+    }
+  ]
+}
